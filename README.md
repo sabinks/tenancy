@@ -4,10 +4,10 @@ Making multi tenancy project with multi database with Passport Authentication wi
 
 ## Stack
 
--   php8.3
+-   php 8.3
 -   laravel 11.31
 -   passport 12.3
--   stancl/tenancy: 3.8
+-   stancl/tenancy  3.8
 
 ## Env file
 
