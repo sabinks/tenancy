@@ -28,7 +28,12 @@ implements HasMiddleware
         $paginate = $request->pagination;
         $order_by = $request->order_by;
         $order = $request->order;
-        return Post::orderBy($order_by, $order)->paginate($paginate);
+        $soft_deleted = $request->soft_deleted == "true" ? true : false;
+        $query = Post::query();
+        if ($soft_deleted) {
+            $query = $query->withTrashed();
+        }
+        return $query->orderBy($order_by, $order)->paginate($paginate);
     }
 
     /**
@@ -80,8 +85,18 @@ implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json([
+                'message' => 'Post not found!',
+            ], 404);
+        }
+        $post->delete();
+
+        return response()->json([
+            'message' => 'Post deleted!',
+        ], 200);
     }
 }
