@@ -21,9 +21,9 @@ class TenantSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $client = new ClientRepository();
+        // $client = new ClientRepository();
 
-        $client->createPasswordGrantClient(null, 'Default password grant client', 'http://tenancy.test');
-        $client->createPersonalAccessClient(null, 'Default personal access client', 'http://tenancy.test');
+        // $client->createPasswordGrantClient(null, 'Default password grant client', 'http://tenancy.test');
+        // $client->createPersonalAccessClient(null, 'Default personal access client', 'http://tenancy.test');
     }
 }

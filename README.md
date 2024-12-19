@@ -19,3 +19,4 @@ Check .env.example file for reference
 -   php artisan migrate
 -   php artisan tenants:migrate
 -   php artisan passport:keys
+-   php artisan tenants:mgirate

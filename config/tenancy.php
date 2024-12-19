@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Stancl\Tenancy\Database\Models\Domain;
-use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
     'tenant_model' => \App\Models\Tenant::class,
@@ -195,6 +194,7 @@ return [
      */
     'seeder_parameters' => [
         '--class' => 'TenantSeeder', // root seeder class
+        '--class' =>  'RoleSeeder'
         // '--force' => true,
     ],
 ];
