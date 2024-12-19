@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\AuthController;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Tenant;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -25,7 +27,6 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 */
 
 Route::middleware([
-    'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
@@ -39,6 +40,10 @@ Route::middleware([
         });
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::get('/get-user', [UserController::class, 'getUser'])->middleware('auth:api');
+        Route::middleware(['auth:api'])->group(function () {
+            Route::post('/posts', [PostController::class, 'store']);
+        });
         Route::get('/create-user', function () {
             $tenant = Tenant::find(tenant('id'));
             $tenant->run(function () {

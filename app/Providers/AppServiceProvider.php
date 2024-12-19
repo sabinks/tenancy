@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Passport::$registersRoutes = false;
-        Passport::loadKeysFrom(base_path(config("passport.key_path")));
+        Passport::loadKeysFrom(__DIR__ . '/../..');
         Passport::enablePasswordGrant();
         Route::group([
             'as' => 'passport.',
@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         ], function () {
             $this->loadRoutesFrom(__DIR__ . "/../../vendor/laravel/passport/src/../routes/web.php");
         });
+
         Passport::useTokenModel(Token::class);
         Passport::useRefreshTokenModel(RefreshToken::class);
         Passport::tokensExpireIn(now()->addDays(15));
