@@ -17,14 +17,18 @@ implements HasMiddleware
     {
         return [
             new Middleware('role:Superadmin|Admin', only: ['store']),
+            new Middleware('role:Superadmin|Admin|Member', only: ['index', 'show']),
         ];
     }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $paginate = $request->pagination;
+        $order_by = $request->order_by;
+        $order = $request->order;
+        return Post::orderBy($order_by, $order)->paginate($paginate);
     }
 
     /**
@@ -44,15 +48,18 @@ implements HasMiddleware
         if ($validator->fails()) {
             return response($validator->errors(), 422);
         }
+        $input = $request->only(['title', 'data']);
+        $post = Post::create($input);
+
+        return response()->json([
+            'message' => 'Posted saved!',
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
-    {
-        //
-    }
+    public function show(Post $post) {}
 
     /**
      * Show the form for editing the specified resource.

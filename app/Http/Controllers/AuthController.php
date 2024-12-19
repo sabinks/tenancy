@@ -59,66 +59,41 @@ class AuthController extends Controller
         }
 
         $user = User::whereEmail($request->email)->first();
-        $domain = tenant()->domains[0]->domain;
-        $response = Http::asForm()->post("$domain/oauth/token", [
-            'grant_type' => 'password',
-            'client_id' => $this->client->id,
-            'client_secret' => $this->client->secret,
-            'username' => $request->email,
-            'password' => $request->password,
-            'scope' => '*',
-        ]);
 
 
-        return $response->json();
-        return $user;
-        // if ($user->verification_token != NULL) {
 
-        //     return response()->json([
-        //         'message' => 'User email verification pending, please check your email!',
-        //     ], 401);
-        // }
 
-        // if (!$user->is_active) {
+        if ($user->verification_token != NULL) {
 
-        //     return response()->json([
-        //         'message' => 'User not authorized or deactivated!',
-        //     ], 401);
-        // }
+            return response()->json([
+                'message' => 'User email verification pending, please check your email!',
+            ], 401);
+        }
+
+        if (!$user->active) {
+
+            return response()->json([
+                'message' => 'User not authorized or deactivated!',
+            ], 401);
+        }
         try {
-            $success = [
+            $domain = tenant()->domains[0]->domain;
+
+            $response = Http::asForm()->post("$domain/oauth/token", [
                 'grant_type' => 'password',
                 'client_id' => $this->client->id,
                 'client_secret' => $this->client->secret,
                 'username' => $request->email,
                 'password' => $request->password,
                 'scope' => '*',
-            ];
-            $tokenRequest = $request->create('/oauth/token', 'POST', $request->all());
-            $request->request->add($success);
-
-            $response = Route::dispatch($tokenRequest);
-            $json = (array) json_decode($response->getContent());
-            $json['name'] = $user->name;
-            $json['email'] = $user->email;
-            // $json['user_id'] = $user->id;
-            // $roles = $user->getRoleNames();
-            // if ($roles->contains('Student')) {
-            //     $json['details'] = $user->student()->first();
-            //     $json['path'] =  '/students/profile_image/';
-            // }
-            // $json['domain'] = Config::get('app.url');
-            // $json['roles'] = $roles;
-            // $permissions = [];
-            // foreach ($roles as $key => $role) {
-            //     $user_role = Rol::findByName($role, 'api');
-            //     $permissions = [...$permissions, ...$user_role->permissions->pluck('name')];
-            // }
-            // $json['permissions'] =  $permissions;
-
-            $response->setContent(json_encode($json));
-
-            return $response;
+            ]);
+            return response([
+                'access_token' => $response->json()['access_token'],
+                'refresh_token' => $response->json()['refresh_token'],
+                'expires_in' => $response->json()['expires_in'],
+                'token_type' => $response->json()['token_type'],
+                'user' => $user,
+            ]);
         } catch (\Throwable $th) {
             return $th;
         }

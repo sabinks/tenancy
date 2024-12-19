@@ -42,7 +42,7 @@ Route::middleware([
         Route::post('/login', [AuthController::class, 'login']);
         Route::get('/get-user', [UserController::class, 'getUser'])->middleware('auth:api');
         Route::middleware(['auth:api'])->group(function () {
-            Route::post('/posts', [PostController::class, 'store']);
+            Route::resource('/posts', PostController::class);
         });
         Route::get('/create-user', function () {
             $tenant = Tenant::find(tenant('id'));
