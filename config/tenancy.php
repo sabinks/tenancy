@@ -194,7 +194,9 @@ return [
      */
     'seeder_parameters' => [
         '--class' => 'TenantSeeder', // root seeder class
-        '--class' =>  'RoleSeeder'
+        '--class' =>  'RoleSeeder',
+        '--class' =>  'PermissionSeeder',
+        '--class' => 'UserSeeder'
         // '--force' => true,
     ],
 ];

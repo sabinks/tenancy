@@ -9,7 +9,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -40,10 +43,23 @@ Route::middleware([
         });
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
-        Route::get('/get-user', [UserController::class, 'getUser'])->middleware('auth:api');
         Route::middleware(['auth:api'])->group(function () {
+            Route::get('/get-user', [UserController::class, 'getUser']);
             Route::resource('/posts', PostController::class);
+
+            Route::get('role-list', [RoleController::class, 'roleList']);
+            Route::resource('role', RoleController::class);
+            Route::resource('permission', PermissionController::class);
+
+            Route::post('assign-role', [UserController::class, 'assignRole']);
+            Route::post('revoke-role', [UserController::class, 'revokeRole']);
+            Route::post('user-roles', [UserController::class, 'userRoles']);
+
+            Route::post('assign-permission', [RolePermissionController::class, 'assignPermission']);
+            Route::post('revoke-permission', [RolePermissionController::class, 'revokePermission']);
+            Route::post('role-permissions', [RolePermissionController::class, 'rolePermissions']);
         });
+
         Route::get('/create-user', function () {
             $tenant = Tenant::find(tenant('id'));
             $tenant->run(function () {

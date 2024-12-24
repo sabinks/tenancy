@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class RoleSeeder extends Seeder
 {
@@ -15,9 +15,11 @@ class RoleSeeder extends Seeder
         $roles = ['Superadmin', 'Admin', 'Member'];
 
         foreach ($roles as $key => $role) {
-            $foundRole = Role::whereName($role)->first();
+            $foundRole = DB::table('roles')->whereName($role)->first();
             if (!$foundRole) {
-                Role::create(['name' => $role]);
+                DB::table('roles')->create([
+                    'name' => $role,
+                ]);
             }
         }
     }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -60,9 +61,6 @@ class AuthController extends Controller
 
         $user = User::whereEmail($request->email)->first();
 
-
-
-
         if ($user->verification_token != NULL) {
 
             return response()->json([
@@ -87,12 +85,21 @@ class AuthController extends Controller
                 'password' => $request->password,
                 'scope' => '*',
             ]);
+            $roles = $user->getRoleNames();
+            $permissions = [];
+            foreach ($roles as $key => $role) {
+                $user_role = Role::findByName($role, 'web');
+                $permissions = [...$permissions, ...$user_role->permissions->pluck('name')];
+            }
+
             return response([
                 'access_token' => $response->json()['access_token'],
                 'refresh_token' => $response->json()['refresh_token'],
                 'expires_in' => $response->json()['expires_in'],
                 'token_type' => $response->json()['token_type'],
                 'user' => $user,
+                'roles' => $roles,
+                'permissions' => $permissions
             ]);
         } catch (\Throwable $th) {
             return $th;

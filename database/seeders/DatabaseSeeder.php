@@ -20,10 +20,5 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-
-        // $client = new ClientRepository();
-
-        // $client->createPasswordGrantClient(null, 'Default password grant client', 'http://your.redirect.path');
-        // $client->createPersonalAccessClient(null, 'Default personal access client', 'http://your.redirect.path');
     }
 }
