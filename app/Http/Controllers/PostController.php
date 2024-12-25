@@ -16,8 +16,9 @@ implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('role:Superadmin|Admin', only: ['store']),
-            new Middleware('role:Superadmin|Admin|Member', only: ['index', 'show']),
+            new Middleware('permission:list-post', only: ['index']),
+            new Middleware('permission:create-post', only: ['store']),
+            new Middleware('permission:show-post', only: ['show']),
         ];
     }
     /**
@@ -35,11 +36,6 @@ implements HasMiddleware
         }
         return $query->orderBy($order_by, $order)->paginate($paginate);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request) {}
 
     /**
      * Store a newly created resource in storage.
@@ -65,14 +61,6 @@ implements HasMiddleware
      * Display the specified resource.
      */
     public function show(Post $post) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

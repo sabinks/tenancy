@@ -2,79 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\UserHelper;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class RolePermissionController extends Controller
+class RolePermissionController extends Controller implements HasMiddleware
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public static function middleware(): array
     {
-        //
-    }
-
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return [
+            new Middleware('role:Superadmin', only: [
+                'assignPermission',
+            ]),
+            new Middleware('role:Superadmin', only: [
+                'revokePermission',
+            ]),
+            new Middleware('role:Superadmin', only: [
+                'rolePermissions'
+            ]),
+        ];
     }
 
     public function assignPermission(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'permission_id' => 'required',
             'role_id' => 'required',
+            'permission_id' => 'required',
         ], [
             'permission_id.required' => 'Please select user',
             'role_id.required' => 'Please select role',
@@ -88,7 +49,15 @@ class RolePermissionController extends Controller
         try {
             $role = Role::find($input['role_id']);
             $permission = Permission::find($input['permission_id']);
-            $result = $role->givePermissionTo($permission->name);
+            // $userHelper = new UserHelper();
+            // $status = $userHelper->donotAllowSelfPermissionAssignment($permission->name);
+            // if ($status) {
+            //     return response()->json([
+            //         'message' => 'Permission denied!'
+            //     ], 403);
+            // }
+
+            $result = $role->givePermissionTo($permission);
             DB::commit();
 
             return response()->json([
@@ -105,8 +74,8 @@ class RolePermissionController extends Controller
     public function revokePermission(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'permission_id' => 'required',
             'role_id' => 'required',
+            'permission_id' => 'required',
         ], [
             'permission_id.required' => 'Please select user',
             'role_id.required' => 'Please select role',

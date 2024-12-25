@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
-    public function __construct() {}
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:assign-role', only: ['assignRole']),
+            new Middleware('permission:revoke-role', only: ['revokeRole']),
+        ];
+    }
 
     public function getUser()
     {
@@ -23,12 +31,13 @@ class UserController extends Controller
         $response['roles'] = $roles;
         $permissions = [];
         foreach ($roles as $key => $role) {
-            $user_role = Role::findByName($role, 'web');
+            $user_role = Role::findByName($role, 'api');
             $permissions = [...$permissions, ...$user_role->permissions->pluck('name')];
         }
         $response['permissions'] =  $permissions;
         return $response;
     }
+
     public function assignRole(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -60,6 +69,7 @@ class UserController extends Controller
             DB::rollback();
         }
     }
+
     public function revokeRole(Request $request)
     {
         $validator = Validator::make($request->all(), [

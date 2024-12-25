@@ -24,6 +24,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'show-post', 'category_name' => 'Post', 'method_name' => 'show'],
             ['name' => 'update-post', 'category_name' => 'Post', 'method_name' => 'update'],
             ['name' => 'delete-post', 'category_name' => 'Post', 'method_name' => 'delete'],
+            ['name' => 'assign-permission', 'category_name' => 'Permission', 'method_name' => 'other'],
+            ['name' => 'revoke-permission', 'category_name' => 'Permission', 'method_name' => 'other'],
+            ['name' => 'assign-role', 'category_name' => 'Role', 'method_name' => 'other'],
+            ['name' => 'revoke-role', 'category_name' => 'Role', 'method_name' => 'other'],
         ];
 
         foreach ($permissions as $permission) {
@@ -33,7 +37,7 @@ class PermissionSeeder extends Seeder
                     'name' => $permission['name'],
                     'category_name' =>  $permission['category_name'],
                     'method_name' => $permission['method_name'],
-                    'guard_name' => 'web',
+                    'guard_name' => 'api',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ]);

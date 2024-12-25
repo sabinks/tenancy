@@ -33,7 +33,7 @@ class AuthController extends Controller
             return response($validator->errors(), 422);
         }
         $input = $request->only(['name', 'email', 'password']);
-        User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
@@ -43,10 +43,11 @@ class AuthController extends Controller
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
-        return $input;
+        $user->assignRole('Member');
+        return response()->json([
+            'message' => 'Member created!',
+        ], 200);
     }
-
-
 
     public function login(Request $request)
     {
@@ -88,7 +89,7 @@ class AuthController extends Controller
             $roles = $user->getRoleNames();
             $permissions = [];
             foreach ($roles as $key => $role) {
-                $user_role = Role::findByName($role, 'web');
+                $user_role = Role::findByName($role, 'api');
                 $permissions = [...$permissions, ...$user_role->permissions->pluck('name')];
             }
 
