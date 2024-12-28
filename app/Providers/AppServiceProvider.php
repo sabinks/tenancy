@@ -27,7 +27,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('Superadmin') ? true : null;
+            if ($user->hasRole('Superadmin')) {
+                return true;
+            } else {
+                $roles = $user->roles;
+                foreach ($roles as $key => $role) {
+                    if ($role->hasPermissionTo($ability)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         });
         Passport::$registersRoutes = false;
         Passport::loadKeysFrom(__DIR__ . '/../..');

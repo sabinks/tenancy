@@ -9,11 +9,13 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RolePermissionController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -59,6 +61,12 @@ Route::middleware([
 
             Route::post('user-roles', [UserController::class, 'userRoles']);
             Route::post('role-permissions', [RolePermissionController::class, 'rolePermissions']);
+
+            Route::resource('workspace', WorkspaceController::class);
+            Route::get('workspace-list', [WorkspaceController::class, 'list']);
+
+            Route::resource('board', BoardController::class);
+            Route::get('board-list', [BoardController::class, 'list']);
         });
 
         Route::get('/create-user', function () {

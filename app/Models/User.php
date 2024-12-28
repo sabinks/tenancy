@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use App\Models\Card;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -54,5 +55,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime:Y-m-d H:i:s',
             'password' => 'hashed',
         ];
+    }
+    public function boards()
+    {
+        return $this->belongsToMany(Board::class, 'board_members', 'member_id', 'board_id');
+    }
+    public function cards()
+    {
+        return $this->belongsToMany(Card::class, 'card_members', 'user_id', 'card_id');
     }
 }
