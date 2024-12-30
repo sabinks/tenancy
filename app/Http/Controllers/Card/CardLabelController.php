@@ -1,24 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Card;
 
-use App\Models\CardFile;
 use Illuminate\Http\Request;
+use App\Models\Card\CardLabel;
+use App\Http\Controllers\Controller;
 
-class CardFileController extends Controller
+class CardLabelController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
         //
     }
@@ -34,15 +27,7 @@ class CardFileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CardFile $cardFile)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CardFile $cardFile)
+    public function show(CardLabel $cardLabel)
     {
         //
     }
@@ -50,7 +35,7 @@ class CardFileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CardFile $cardFile)
+    public function update(Request $request, CardLabel $cardLabel)
     {
         //
     }
@@ -58,7 +43,7 @@ class CardFileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CardFile $cardFile)
+    public function destroy(CardLabel $cardLabel)
     {
         //
     }

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Card;
 
-use App\Models\CardChecklist;
 use Illuminate\Http\Request;
+use App\Models\Card\CardChecklist;
+use App\Http\Controllers\Controller;
 
 class CardChecklistController extends Controller
 {
@@ -11,14 +12,6 @@ class CardChecklistController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
         //
     }
@@ -35,14 +28,6 @@ class CardChecklistController extends Controller
      * Display the specified resource.
      */
     public function show(CardChecklist $cardChecklist)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CardChecklist $cardChecklist)
     {
         //
     }

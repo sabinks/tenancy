@@ -14,9 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 class Card extends Model
 {
     protected $fillable = [
+        'board_id',
         'task_id',
         'name',
         'description',
+        'indexing',
         'created_by'
     ];
     protected static function boot()
@@ -25,6 +27,10 @@ class Card extends Model
         self::creating(function ($model) {
             $model->created_by = Auth::id();
         });
+    }
+    public function board()
+    {
+        return $this->belongsTo(Board::class);
     }
     public function task()
     {

@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->longText('data');
-            $table->boolean('publish')->default(false);
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+        Schema::table('cards', function (Blueprint $table) {
+            $table->unsignedBigInteger('board_id')->default(1)->before('task_id');
+            $table->unsignedBigInteger('indexing')->default(1)->before('created_by');
         });
     }
 
@@ -26,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::table('cards', function (Blueprint $table) {
+            $table->dropColumn(['board_id', 'indexing']);
+        });
     }
 };

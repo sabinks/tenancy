@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     protected $table = 'tasks';
+
     protected $fillable = [
         'board_id',
         'name',
@@ -20,9 +21,6 @@ class Task extends Model
     {
         parent::boot();
         self::creating(function ($model) {
-            $model->created_by = Auth::id();
-        });
-        self::inserting(function ($model) {
             $model->created_by = Auth::id();
         });
     }

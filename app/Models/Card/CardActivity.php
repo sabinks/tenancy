@@ -20,6 +20,9 @@ class CardActivity extends Model
         self::creating(function ($model) {
             $model->created_by = Auth::id();
         });
+        self::updating(function ($model) {
+            $model->created_by = Auth::id();
+        });
     }
     public function card()
     {

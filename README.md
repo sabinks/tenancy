@@ -7,7 +7,7 @@ Making multi tenancy project with multi database with Passport Authentication wi
 -   php 8.3
 -   laravel 11.31
 -   passport 12.3
--   stancl/tenancy  3.8
+-   stancl/tenancy 3.8
 
 ## Env file
 
@@ -19,4 +19,7 @@ Check .env.example file for reference
 -   php artisan migrate
 -   php artisan tenants:migrate
 -   php artisan passport:keys
--   php artisan tenants:mgirate
+-   php artisan tenants:rollack --step=1
+
+-   composer require predis/predis:^2.0
+-   sudo apt-get install php8.0-redis

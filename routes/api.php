@@ -7,12 +7,16 @@ use App\Models\User;
 use App\Models\Tenant;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\Card\CardActivityController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolePermissionController;
@@ -31,13 +35,16 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
+
 Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    // Route::get('/', function () {
-    //     return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('domain');
-    // });
+    Route::get('publish', function () {
+        Redis::publish('test-channel', json_encode([
+            'domain' => $tenant = Tenant::find(tenant('id'))
+        ]));
+    });
     Route::prefix('')->group(function () {
         Route::get('/', function () {
             $tenant = Tenant::find(tenant('id'));
@@ -47,7 +54,6 @@ Route::middleware([
         Route::post('/login', [AuthController::class, 'login']);
         Route::middleware(['auth:api'])->group(function () {
             Route::get('/get-user', [UserController::class, 'getUser']);
-            Route::resource('/posts', PostController::class);
 
             Route::get('role-list', [RoleController::class, 'roleList']);
             Route::resource('role', RoleController::class);
@@ -67,6 +73,9 @@ Route::middleware([
 
             Route::resource('board', BoardController::class);
             Route::get('board-list', [BoardController::class, 'list']);
+            Route::resource('tasks', TaskController::class);
+            Route::resource('tasks/{task_id}/cards', CardController::class);
+            Route::resource('cards/{card_id}/activities', CardActivityController::class);
         });
 
         Route::get('/create-user', function () {

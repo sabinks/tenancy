@@ -1,24 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Card;
 
-use App\Models\TaskList;
 use Illuminate\Http\Request;
+use App\Models\Card\CardFile;
+use App\Http\Controllers\Controller;
 
-class TaskListController extends Controller
+class CardFileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
         //
     }
@@ -34,15 +27,7 @@ class TaskListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TaskList $taskList)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TaskList $taskList)
+    public function show(CardFile $cardFile)
     {
         //
     }
@@ -50,7 +35,7 @@ class TaskListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TaskList $taskList)
+    public function update(Request $request, CardFile $cardFile)
     {
         //
     }
@@ -58,7 +43,7 @@ class TaskListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TaskList $taskList)
+    public function destroy(CardFile $cardFile)
     {
         //
     }
