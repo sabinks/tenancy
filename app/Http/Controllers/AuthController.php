@@ -6,13 +6,12 @@ use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -105,5 +104,11 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return $th;
         }
+    }
+
+    public function logout()
+    {
+        $user = Auth::user()->token();
+        $user->revoke();
     }
 }

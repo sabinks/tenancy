@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -56,6 +55,7 @@ Route::middleware([
         Route::post('/login', [AuthController::class, 'login']);
         Route::middleware(['auth:api'])->group(function () {
             Route::get('/get-user', [UserController::class, 'getUser']);
+            Route::post('/logout', [AuthController::class, 'logout']);
 
             Route::get('role-list', [RoleController::class, 'roleList']);
             Route::resource('role', RoleController::class);

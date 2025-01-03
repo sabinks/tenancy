@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Token;
 use Laravel\Passport\Passport;
 use Laravel\Passport\RefreshToken;
-use Laravel\Passport\Token;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -57,8 +56,8 @@ class AppServiceProvider extends ServiceProvider
 
         Passport::useTokenModel(Token::class);
         Passport::useRefreshTokenModel(RefreshToken::class);
-        Passport::tokensExpireIn(now()->addDays(15));
-        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::tokensExpireIn(now()->addHours(24));
+        Passport::refreshTokensExpireIn(now()->addHours(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
     }
 }
