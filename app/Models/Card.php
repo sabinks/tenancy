@@ -21,6 +21,13 @@ class Card extends Model
         'indexing',
         'created_by'
     ];
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+        ];
+    }
     protected static function boot()
     {
         parent::boot();

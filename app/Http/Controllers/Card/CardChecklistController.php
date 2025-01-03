@@ -8,6 +8,9 @@ use App\Models\Card\CardChecklist;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CardChecklistRequest;
 use App\Models\Card\ChecklistItem;
+use GuzzleHttp\Exception\ServerException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CardChecklistController extends Controller
 {
@@ -25,9 +28,13 @@ class CardChecklistController extends Controller
     public function store(CardChecklistRequest $request, $card_id)
     {
         $card = Card::find($card_id);
-        $card->checklists()->create([
+        $cardChecklist = $card->checklists()->create([
             'name' => $request->name
         ]);
+        return response()->json([
+            'id' => $cardChecklist->id,
+            'message' => 'Card Checklist stored!',
+        ], 201);
     }
 
     /**
@@ -35,7 +42,10 @@ class CardChecklistController extends Controller
      */
     public function show($card_id, $id)
     {
-        $cardChecklist = CardChecklist::find($id)->with(['created_by:id,name,email'])->first();
+        $cardChecklist = CardChecklist::whereId($id)->with(['created_by:id,name,email'])->first();
+        if (!$cardChecklist) {
+            throw new NotFoundHttpException('No record found');
+        }
         return $cardChecklist;
     }
 
@@ -45,8 +55,18 @@ class CardChecklistController extends Controller
     public function update(CardChecklistRequest $request, $card_id, $id)
     {
         $cardChecklist = CardChecklist::find($id);
+        if (!$cardChecklist) {
+            throw new NotFoundHttpException('No record found');
+        }
         $cardChecklist->name = $request->name;
-        $cardChecklist->update();
+        $updatedCardChecklist = $cardChecklist->update();
+        if (!$updatedCardChecklist) {
+            throw new HttpException(500, "Server Error");
+        }
+        return response()->json([
+            'id' => $cardChecklist->id,
+            'message' => 'Card Checklist updated!',
+        ]);
     }
 
     /**
@@ -55,6 +75,10 @@ class CardChecklistController extends Controller
     public function destroy($card_id, $id)
     {
         $cardChecklist = CardChecklist::find($id);
+        if (!$cardChecklist) {
+            throw new NotFoundHttpException('No record found');
+        }
+        $cardChecklist->checklistItems()->delete();
         $cardChecklist->delete();
     }
 }

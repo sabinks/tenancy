@@ -23,7 +23,7 @@ class BoardController extends Controller
 
     public function list(Request $request)
     {
-        return Board::get(['id', 'title']);
+        return Board::latest()->get(['id', 'title']);
     }
 
     /**
@@ -63,7 +63,7 @@ class BoardController extends Controller
     public function show(Board $board)
     {
         if (!$board) {
-            throw new NotFoundHttpException('Board not found!');
+            throw new NotFoundHttpException('No record found!');
         }
         return [
             'board' => $board,
@@ -84,6 +84,8 @@ class BoardController extends Controller
      */
     public function destroy(Board $board)
     {
-        //
+        $board->tasks()->delete();
+        $board->tasks()->cards()->delete();
+        $board->delete();
     }
 }

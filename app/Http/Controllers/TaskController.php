@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TaskController extends Controller
 {
@@ -15,7 +16,7 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        return Task::whereBoardId($request->board_id)->get();
+        return Task::whereBoardId($request->board_id)->latest()->get();
     }
 
     /**
@@ -24,12 +25,13 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $taskCount = Task::whereBoardId($request->board_id)->count();
-        $log = Task::create([
+        $task = Task::create([
             'board_id' => $request->board_id,
             'name' => $request->name,
             'indexing' => $taskCount + 1,
         ]);
         return response()->json([
+            'id' => $task->id,
             'message' => 'Task created!',
         ], 201);
     }
@@ -37,24 +39,32 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $taskList)
+    public function show(Task $task)
     {
-        //
+        if (!$task) {
+            throw new NotFoundHttpException('No record found!');
+        }
+        return $task;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $taskList)
+    public function update(Request $request, Task $task)
     {
-        //
+        if (!$task) {
+            throw new NotFoundHttpException('No record found!');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $taskList)
+    public function destroy(Task $task)
     {
-        //
+        if (!$task) {
+            throw new NotFoundHttpException('No record found!');
+        }
+        $task->delete();
     }
 }

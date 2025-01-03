@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use App\Models\Task;
-use Illuminate\Http\Request;
 use App\Http\Requests\CardRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,7 +14,7 @@ class CardController extends Controller
      */
     public function index($task_id)
     {
-        return Card::whereTaskId($task_id)->get();
+        return Card::whereTaskId($task_id)->latest()->get();
     }
 
     /**
@@ -32,6 +31,7 @@ class CardController extends Controller
             'indexing' => $cardCount + 1,
         ]);
         return response()->json([
+            "id" => $card->id,
             'message' => 'Card created!',
         ], 201);
     }
@@ -39,30 +39,44 @@ class CardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($task_id, $id)
     {
-        $card = Card::find($id);
+        $card = Card::whereId($id)->with(['created_by:id,name,email'])->first();
         if (!$card) {
-            return response()->json([
-                'message' => 'Card not found!',
-            ], 404);
+            throw new NotFoundHttpException('No record found!');
         }
+
         return $card;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Card $card)
+    public function update(CardRequest $request, $card_id, $id)
     {
-        //
+        $card = Card::find($id);
+        if (!$card) {
+            throw new NotFoundHttpException('No record found!');
+        }
+        $card->name = $request->name;
+        $card->name = $request->name;
+        $updatedCard = $card->update();
+
+        return response()->json([
+            "id" => $updatedCard->id,
+            'message' => 'Card updated!',
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Card $card)
+    public function destroy($task_id, $id)
     {
-        //
+        $card = Card::find($id);
+        if (!$card) {
+            throw new NotFoundHttpException('No record found!');
+        }
+        $card->delete();
     }
 }

@@ -73,13 +73,14 @@ Route::middleware([
             Route::resource('workspace', WorkspaceController::class);
             Route::get('workspace-list', [WorkspaceController::class, 'list']);
 
-            Route::resource('board', BoardController::class);
+            Route::resource('boards', BoardController::class);
             Route::get('board-list', [BoardController::class, 'list']);
             Route::resource('tasks', TaskController::class);
             Route::resource('tasks/{task_id}/cards', CardController::class);
             Route::resource('cards/{card_id}/activities', CardActivityController::class);
             Route::resource('cards/{card_id}/checklists', CardChecklistController::class);
             Route::resource('checklists/{checklist_id}/checklist-items', ChecklistItemController::class);
+            Route::post('checklist-items/{id}/checked', [ChecklistItemController::class, 'checklistItemChecked']);
         });
 
         Route::get('/create-user', function () {

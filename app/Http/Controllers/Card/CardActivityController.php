@@ -6,6 +6,7 @@ use App\Models\Card\CardActivity;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Card\CardActivityRequest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CardActivityController extends Controller
 {
@@ -27,6 +28,7 @@ class CardActivityController extends Controller
             'comment' => $request->comment
         ]);
         return response()->json([
+            'id' => $activity->id,
             'message' => 'Activity added!',
         ], 201);
     }
@@ -36,11 +38,9 @@ class CardActivityController extends Controller
      */
     public function show($card_id, $id)
     {
-        $cardActivity = CardActivity::find($id);
+        $cardActivity = CardActivity::whereId($id)->with(['created_by:id,name,email'])->first();
         if (!$cardActivity) {
-            return response()->json([
-                'message' => 'Activity not found!',
-            ], 404);
+            throw new NotFoundHttpException('No record found!');
         }
         return $cardActivity;
     }
@@ -52,14 +52,13 @@ class CardActivityController extends Controller
     {
         $cardActivity = CardActivity::find($id);
         if (!$cardActivity) {
-            return response()->json([
-                'message' => 'Activity not found!',
-            ], 404);
+            throw new NotFoundHttpException('No record found!');
         }
         $cardActivity->comment = $request->comment;
         $cardActivity->update();
 
         return response()->json([
+            'id' => $cardActivity->id,
             'message' => 'Card activity updated!',
         ], 200);
     }
@@ -71,9 +70,7 @@ class CardActivityController extends Controller
     {
         $cardActivity = CardActivity::find($id);
         if (!$cardActivity) {
-            return response()->json([
-                'message' => 'Activity not found!',
-            ], 404);
+            throw new NotFoundHttpException('No record found!');
         }
         $cardActivity->delete();
         return response()->json([
