@@ -25,9 +25,8 @@ class CardController extends Controller
     {
         $cardCount = Card::whereTaskId($task_id)->count();
         $task = Task::find($task_id);
-        $card = Card::create([
+        $card = $task->cards()->create([
             'board_id' => $task->board->id,
-            'task_id' => $task_id,
             'name' => $request->name,
             'description' => '',
             'indexing' => $cardCount + 1,

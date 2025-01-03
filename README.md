@@ -1,6 +1,7 @@
 ## About Project
 
-Making multi tenancy project with multi database with Passport Authentication with simple proxy server.
+-   Making multi tenancy project with multi database with Passport Authentication with simple proxy server.
+-   Project management tool
 
 ## Stack
 
@@ -18,8 +19,8 @@ Check .env.example file for reference
 -   copy tenancy.conf, tenancy1.conf, tenancy2.conf to /etc/nginx/sites-available and create symlink /etc/nginx/sites-enabled
 -   php artisan migrate
 -   php artisan tenants:migrate
--   php artisan passport:keys
 -   php artisan tenants:rollack --step=1
+-   php artisan passport:keys
 
 -   composer require predis/predis:^2.0
 -   sudo apt-get install php8.0-redis

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Card;
 use App\Models\User;
 use App\Models\Board;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,10 @@ class Task extends Model
     public function board()
     {
         return $this->belongsTo(Board::class);
+    }
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
     }
     public function created_by()
     {

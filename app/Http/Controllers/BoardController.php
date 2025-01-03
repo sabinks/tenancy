@@ -42,11 +42,11 @@ class BoardController extends Controller
                 'background' => 'template_01', //to be later decided
                 'publish' => true
             ]);
-            $task = Task::insert([
-                ['board_id' => $board->id, 'name' => 'Backlog', 'indexing' => 1, 'created_by' => Auth::id()],
-                ['board_id' => $board->id, 'name' => 'To do', 'indexing' => 2, 'created_by' => Auth::id()],
-                ['board_id' => $board->id, 'name' => 'Doing', 'indexing' => 3, 'created_by' => Auth::id()],
-                ['board_id' => $board->id, 'name' => 'Done', 'indexing' => 4, 'created_by' => Auth::id()],
+            $board->tasks()->createMany([
+                ['name' => 'Backlog', 'indexing' => 1, 'created_by' => Auth::id()],
+                ['name' => 'To do', 'indexing' => 2, 'created_by' => Auth::id()],
+                ['name' => 'Doing', 'indexing' => 3, 'created_by' => Auth::id()],
+                ['name' => 'Done', 'indexing' => 4, 'created_by' => Auth::id()],
             ]);
             DB::commit();
             return response()->json([

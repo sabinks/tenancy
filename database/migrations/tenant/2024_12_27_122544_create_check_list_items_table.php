@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('card_checklists', function (Blueprint $table) {
+        Schema::create('checklist_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id');
+            $table->unsignedBigInteger('card_checklist_id');
+            $table->boolean('checked')->default(false);
             $table->string('name');
-            $table->unsignedBigInteger('created_by');
+            $table->string('assigned_date')->nullable();
+            $table->unsignedBigInteger('assigned_to')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('card_checklists');
+        Schema::dropIfExists('check_list_items');
     }
 };

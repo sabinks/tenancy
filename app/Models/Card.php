@@ -44,7 +44,7 @@ class Card extends Model
     {
         return $this->hasMany(CardLabel::class);
     }
-    public function checklist()
+    public function checklists()
     {
         return $this->hasMany(CardChecklist::class);
     }

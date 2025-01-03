@@ -17,6 +17,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\Card\CardActivityController;
+use App\Http\Controllers\Card\CardChecklistController;
+use App\Http\Controllers\Card\ChecklistItemController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolePermissionController;
@@ -76,6 +78,8 @@ Route::middleware([
             Route::resource('tasks', TaskController::class);
             Route::resource('tasks/{task_id}/cards', CardController::class);
             Route::resource('cards/{card_id}/activities', CardActivityController::class);
+            Route::resource('cards/{card_id}/checklists', CardChecklistController::class);
+            Route::resource('checklists/{checklist_id}/checklist-items', ChecklistItemController::class);
         });
 
         Route::get('/create-user', function () {

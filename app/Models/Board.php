@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,10 @@ class Board extends Model
     public function workspace()
     {
         return $this->belongsTo(Workspace::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
     public function members()
     {
